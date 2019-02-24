@@ -1,6 +1,5 @@
 package com.isb.mobiles.web.rest;
 
-import com.isb.mobiles.domain.enumeration.Type;
 import com.isb.mobiles.service.MobileSubscriptionService;
 import com.isb.mobiles.service.dto.MobileSubscriptionDTO;
 import com.isb.mobiles.web.rest.errors.BadRequestAlertException;
@@ -58,7 +57,7 @@ public class MobileSubscriptionController {
      * @return the ResponseEntity with status 200 (OK) and the list of mobile subscriptions in body
      */
     @GetMapping("/subscriptions")
-    public ResponseEntity<List<MobileSubscriptionDTO>> getAllGames(Pageable pageable) {
+    public ResponseEntity<List<MobileSubscriptionDTO>> getAll(Pageable pageable) {
         log.debug("REST request to get a page of Mobile Subscriptions");
         Page<MobileSubscriptionDTO> page = mobileSubscriptionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/subscriptions");
@@ -83,7 +82,7 @@ public class MobileSubscriptionController {
 
 
     /**
-     * PUT /subscriptions/{id} : Updates owner and user of Mobile Subscription.
+     * PUT /subscriptions/:id : Updates owner and user of Mobile Subscription.
      *
      * @param mobileSubscriptionDTO owner/user of mobile subscription to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated mobile subscription
@@ -99,19 +98,33 @@ public class MobileSubscriptionController {
     }
 
     /**
-     * PUT /subscriptions/{id}/type : Updates service type of Mobile Subscription.
+     * PUT /subscriptions/:id/type : Updates service type of Mobile Subscription.
      *
      * @param type service type to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated mobile subscription
      * @throws MobileSubscriptionNotFoundException 404 (Bad Request) if the mobile subscription is not found
      */
     @PutMapping("/subscriptions/{id}/type")
-    public ResponseEntity<MobileSubscriptionDTO> updateUser (
+    public ResponseEntity<MobileSubscriptionDTO> updateType (
             @RequestParam("serviceType") String type,
             @PathVariable Integer id) throws MobileSubscriptionNotFoundException, IllegalArgumentException {
         log.debug("REST request to update service type of Mobile Subscription service : {}", type);
         MobileSubscriptionDTO mobSubUpdated = mobileSubscriptionService.updateType(id, type);
         return new ResponseEntity<MobileSubscriptionDTO>(mobSubUpdated, HttpStatus.OK);
+    }
+
+
+    /**
+     * DELETE  /subscriptions/:id : delete the "id" Mobile Subscription.
+     *
+     * @param id the id of the MobileSubscriptionDTO to delete
+     * @return the ResponseEntity with status 200 (OK)
+     */
+    @DeleteMapping("/subscriptions/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+        log.debug("REST request to delete Mobile Subscription : {}", id);
+        mobileSubscriptionService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
 }

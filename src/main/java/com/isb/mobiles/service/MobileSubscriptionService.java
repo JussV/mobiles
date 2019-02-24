@@ -37,7 +37,6 @@ public class MobileSubscriptionService {
                                      MobileSubscriptionSearchRepository mobileSubscriptionSearchRepository,
                                      MobileSubscriptionMapper mobileSubscriptionMapper,
                                      EntityManager entityManager,
-                                     CustomerService customerService,
                                      CustomerMapper customerMapper) {
         this.mobileSubscriptionRepository = mobileSubscriptionRepository;
         this.mobileSubscriptionSearchRepository = mobileSubscriptionSearchRepository;
@@ -148,5 +147,16 @@ public class MobileSubscriptionService {
         return mobileSubscriptionMapper.toDto(mobileSubscription);
 
     }
+
+    /**
+     * Delete the mobile subscription by id.
+     *
+     * @param id the id of the entity
+     */
+    public void delete(Integer id) {
+        log.debug("Request to delete Mobile Subscription : {}", id);
+        mobileSubscriptionRepository.deleteById(id);
+    }
+
 
 }
