@@ -29,11 +29,19 @@ swagger:
       param: Id of the mobile subscription
     get-all:
       value: Get all mobile subscriptions
+      param: pageable params
     search:
       value: Search mobile subscriptions by mobile number
       param: Query to search mobile numbers
     update:
-      value: Update owner and/or user of Mobile Subscription
+      owner:
+        value: Update owner of Mobile Subscription
+        param: Mobile subscription with owner info to update
+        id: Id of the mobile subscription
+      user:
+        value: Update user of Mobile Subscription
+        param: Mobile subscription with user info to update
+        id: Id of the mobile subscription
     update-type:
       value: Update service type of Mobile Subscription
       param: Type of the mobile subscription to update

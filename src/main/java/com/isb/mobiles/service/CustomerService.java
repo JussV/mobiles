@@ -38,7 +38,7 @@ public class CustomerService {
      * @return the entity
      */
     @Transactional(readOnly = true)
-    public Optional<CustomerDTO> findOne(Integer id) {
+    public Optional<CustomerDTO> findById(Integer id) {
         log.debug("Request to get Customer : {}", id);
         return customerRepository.findById(id)
                 .map(customerMapper::toDto);

@@ -8,8 +8,8 @@ public class MobileSubscriptionNotFoundException extends AbstractThrowableProble
 
     private static final long serialVersionUID = 1L;
 
-    public MobileSubscriptionNotFoundException() {
-        super(ErrorConstants.MOBILE_SUBSCRIPTION_NOT_FOUND_TYPE, "Mobile Subscription not found", Status.NOT_FOUND);
+    public MobileSubscriptionNotFoundException(int id) {
+        super(ErrorConstants.MOBILE_SUBSCRIPTION_NOT_FOUND_TYPE, "Mobile Subscription not found for id " + id, Status.NOT_FOUND);
     }
 
 }

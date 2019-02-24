@@ -25,10 +25,12 @@ public class MobileSubscription {
     @Pattern(regexp = "^\\+?[1-9]\\d{1,14}$")
     private String msisdn;
 
+    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id_owner")
     private Customer owner;
 
+    @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id_user")
     private Customer user;
