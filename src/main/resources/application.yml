@@ -1,0 +1,9 @@
+spring:
+  data:
+    elasticsearch:
+      # Defaults to cluster-name 'elasticsearch'
+      cluster-name: elasticsearch
+      cluster-nodes: 127.0.0.1:9300
+      properties:
+        # https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
+        client.transport.ignore_cluster_name: true
