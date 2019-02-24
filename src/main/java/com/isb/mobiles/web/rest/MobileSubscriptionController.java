@@ -1,10 +1,12 @@
 package com.isb.mobiles.web.rest;
 
+import com.isb.mobiles.domain.enumeration.Type;
 import com.isb.mobiles.service.MobileSubscriptionService;
 import com.isb.mobiles.service.dto.MobileSubscriptionDTO;
 import com.isb.mobiles.web.rest.errors.BadRequestAlertException;
 import com.isb.mobiles.web.rest.errors.MobileSubscriptionNotFoundException;
 import com.isb.mobiles.web.rest.util.PaginationUtil;
+import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import java.util.Optional;
 @RestController
 @Slf4j
 @RequestMapping(path = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(value="mobilesubscriptions", description="Operations pertaining to mobile subscriptions")
 public class MobileSubscriptionController {
 
     private final MobileSubscriptionService mobileSubscriptionService;
@@ -42,7 +45,12 @@ public class MobileSubscriptionController {
      * or with status 400 (Bad Request) if the subscription's id already exists
      */
     @PostMapping(value = "/subscriptions", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "${swagger.sub-controller.create.value}", response = MobileSubscriptionDTO.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Successfully created mobile subscription")
+    })
     public ResponseEntity<MobileSubscriptionDTO> create(
+            @ApiParam(value = "${swagger.sub-controller.create.param}")
             @Valid @RequestBody MobileSubscriptionDTO mobileSubscriptionDTO) {
 
         log.debug("REST request to save Mobile Subscription : {}", mobileSubscriptionDTO);
@@ -60,7 +68,9 @@ public class MobileSubscriptionController {
      * @return the ResponseEntity with status 200 (OK) and the list of mobile subscriptions in body
      */
     @GetMapping("/subscriptions")
+    @ApiOperation(value = "${swagger.sub-controller.get-all.value}", response = List.class)
     public ResponseEntity<List<MobileSubscriptionDTO>> getAll(Pageable pageable) {
+
         log.debug("REST request to get a page of Mobile Subscriptions");
         Page<MobileSubscriptionDTO> page = mobileSubscriptionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/subscriptions");
@@ -75,7 +85,10 @@ public class MobileSubscriptionController {
      * @return the ResponseEntity with status 200 (OK) and the mobile subscription in body
      */
     @GetMapping("/subscriptions/{id}")
-    public ResponseEntity<MobileSubscriptionDTO> get(@PathVariable Integer id) {
+    @ApiOperation(value = "${swagger.sub-controller.get.value}", response = MobileSubscriptionDTO.class)
+    public ResponseEntity<MobileSubscriptionDTO> get(
+            @ApiParam(value = "${swagger.sub-controller.get.param}")
+            @PathVariable Integer id) {
         log.debug("REST request to get Mobile Subscription by id {}", id);
         Optional<MobileSubscriptionDTO> mobSub = mobileSubscriptionService.findOne(id);
 
@@ -94,9 +107,12 @@ public class MobileSubscriptionController {
      * @return the ResponseEntity with status 200 (OK) and the list of mobile subscriptions in body
      */
     @GetMapping("/subscriptions/search")
-    public ResponseEntity<List<MobileSubscriptionDTO>> search(@RequestParam String query, Pageable pageable) {
+    @ApiOperation(value = "${swagger.sub-controller.search.value}", response = List.class)
+    public ResponseEntity<List<MobileSubscriptionDTO>> search(
+            @ApiParam(value="${swagger.sub-controller.search.param}")
+            @RequestParam(value = "query", required = false, defaultValue = "") String query,
+            Pageable pageable) {
         log.debug("REST request to search for a page of Mobile Subscriptions for query {}", query);
-
         Page<MobileSubscriptionDTO> page = mobileSubscriptionService.search("*" + query + "*", pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/subscriptions");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -104,9 +120,10 @@ public class MobileSubscriptionController {
 
 
     /**
-     * PUT /subscriptions/:id : Updates owner and user of Mobile Subscription.
+     * PUT /subscriptions/:id : Updates owner and/or user of Mobile Subscription.
      *
      * @param mobileSubscriptionDTO owner/user of mobile subscription to update
+     * @param id id of the mobile subscription
      * @return the ResponseEntity with status 200 (OK) and with body the updated mobile subscription
      * @throws MobileSubscriptionNotFoundException 404 (Bad Request) if the mobile subscription is not found
      */
@@ -122,16 +139,20 @@ public class MobileSubscriptionController {
     /**
      * PUT /subscriptions/:id/type : Updates service type of Mobile Subscription.
      *
-     * @param type service type to update
+     * @param mobileSubscriptionDTO mobileSubscriptionDTO to update
+     * @param id id of the mobile subscription
      * @return the ResponseEntity with status 200 (OK) and with body the updated mobile subscription
      * @throws MobileSubscriptionNotFoundException 404 (Bad Request) if the mobile subscription is not found
      */
     @PutMapping("/subscriptions/{id}/type")
+    @ApiOperation(value = "${swagger.sub-controller.update-type.value}", response = MobileSubscriptionDTO.class)
     public ResponseEntity<MobileSubscriptionDTO> updateType (
-            @RequestParam("serviceType") String type,
+            @ApiParam(value="${swagger.sub-controller.update-type.param}")
+            @Valid @RequestBody MobileSubscriptionDTO mobileSubscriptionDTO,
+            @ApiParam(value="${swagger.sub-controller.update-type.id}")
             @PathVariable Integer id) throws MobileSubscriptionNotFoundException, IllegalArgumentException {
-        log.debug("REST request to update service type of Mobile Subscription service : {}", type);
-        MobileSubscriptionDTO mobSubUpdated = mobileSubscriptionService.updateType(id, type);
+        log.debug("REST request to update service type of Mobile Subscription service : {}", mobileSubscriptionDTO.getServiceType());
+        MobileSubscriptionDTO mobSubUpdated = mobileSubscriptionService.updateType(id, mobileSubscriptionDTO.getServiceType());
         return new ResponseEntity<MobileSubscriptionDTO>(mobSubUpdated, HttpStatus.OK);
     }
 
@@ -143,10 +164,14 @@ public class MobileSubscriptionController {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/subscriptions/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Integer id) {
+    @ApiOperation(value = "${swagger.sub-controller.delete.value}")
+    public ResponseEntity<Void> delete(
+            @ApiParam(value="${swagger.sub-controller.delete.id}")
+            @PathVariable Integer id) {
         log.debug("REST request to delete Mobile Subscription : {}", id);
         mobileSubscriptionService.delete(id);
         return ResponseEntity.ok().build();
     }
 
 }
+

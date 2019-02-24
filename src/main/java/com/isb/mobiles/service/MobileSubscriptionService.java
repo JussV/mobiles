@@ -114,13 +114,13 @@ public class MobileSubscriptionService {
      * @param type to update
      * @return the updated entity
      */
-    public MobileSubscriptionDTO updateType(Integer id, String type) {
+    public MobileSubscriptionDTO updateType(Integer id, Type type) {
         log.debug("Request to update Mobile Subscription Type to be: {}", type);
 
         try {
             MobileSubscription subUpdated = mobileSubscriptionRepository.findById(id)
                     .map(sub -> {
-                        sub.setServiceType(Type.valueOf(type));
+                        sub.setServiceType(type);
                         log.debug("Changed Type for Mobile Subscription: {}", sub);
                         return sub;
                     })

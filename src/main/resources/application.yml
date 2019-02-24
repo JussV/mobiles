@@ -7,3 +7,41 @@ spring:
       properties:
         # https://www.elastic.co/guide/en/elasticsearch/client/java-api/current/transport-client.html
         client.transport.ignore_cluster_name: true
+
+swagger:
+  customer:
+    id: The database generated mobile subscription ID
+    first-name: The first name of the customer
+    last-name: The last name of the customer
+  subscription:
+    id: The database generated mobile subscription ID
+    msisdn: The mobile number of the subscription
+    owner: The owner of the mobile subscription
+    user: The user of the mobile subscription
+    type: The service type of the mobile subscription
+    start-date: The start date of the mobile subscription
+  sub-controller:
+    create:
+      value: Create new mobile subscription
+      param: Mobile Subscription information for a new subscription to be created
+    get:
+      value: Get mobile subscription
+      param: Id of the mobile subscription
+    get-all:
+      value: Get all mobile subscriptions
+    search:
+      value: Search mobile subscriptions by mobile number
+      param: Query to search mobile numbers
+    update:
+      value: Update owner and/or user of Mobile Subscription
+    update-type:
+      value: Update service type of Mobile Subscription
+      param: Type of the mobile subscription to update
+      id: Id of the mobile subscription
+    delete:
+      value: Delete mobile subscription
+      id: Id of the mobile subscription
+
+
+
+

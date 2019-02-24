@@ -27,12 +27,10 @@ public class MobileSubscription {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id_owner")
-    //@Field(type = FieldType.Nested, includeInParent = true)
     private Customer owner;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "customer_id_user")
-    //@Field(type = FieldType.Nested, includeInParent = true)
     private Customer user;
 
     @NotNull
