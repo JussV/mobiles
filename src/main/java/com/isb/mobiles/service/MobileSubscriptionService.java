@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -55,6 +56,20 @@ public class MobileSubscriptionService {
     public Page<MobileSubscriptionDTO> findAll(Pageable pageable) {
         log.debug("Request to get all Mobile Subscriptions");
         return mobileSubscriptionRepository.findAll(pageable)
+                .map(mobileSubscriptionMapper::toDto);
+    }
+
+
+    /**
+     * Get mobile subscription by id.
+     *
+     * @param id the id of the entity
+     * @return the entity
+     */
+    @Transactional(readOnly = true)
+    public Optional<MobileSubscriptionDTO> findOne(Integer id) {
+        log.debug("Request to get Mobile Subscription : {}", id);
+        return mobileSubscriptionRepository.findById(id)
                 .map(mobileSubscriptionMapper::toDto);
     }
 
@@ -157,6 +172,5 @@ public class MobileSubscriptionService {
         log.debug("Request to delete Mobile Subscription : {}", id);
         mobileSubscriptionRepository.deleteById(id);
     }
-
 
 }

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing Mobile Subscriptions.
@@ -41,7 +42,9 @@ public class MobileSubscriptionController {
      * or with status 400 (Bad Request) if the subscription's id already exists
      */
     @PostMapping(value = "/subscriptions", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<MobileSubscriptionDTO> createMobileSubscription(@Valid @RequestBody MobileSubscriptionDTO mobileSubscriptionDTO) {
+    public ResponseEntity<MobileSubscriptionDTO> create(
+            @Valid @RequestBody MobileSubscriptionDTO mobileSubscriptionDTO) {
+
         log.debug("REST request to save Mobile Subscription : {}", mobileSubscriptionDTO);
         if (mobileSubscriptionDTO.getId() != null) {
             throw new BadRequestAlertException("Mobile subscription cannot be added, already has an ID", ENTITY_NAME, "id exists");
@@ -62,6 +65,25 @@ public class MobileSubscriptionController {
         Page<MobileSubscriptionDTO> page = mobileSubscriptionService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/subscriptions");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+    }
+
+
+    /**
+     * GET  /subscriptions/:id : get mobile subscription by id.
+     *
+     * @param id the id of mobile subscription
+     * @return the ResponseEntity with status 200 (OK) and the mobile subscription in body
+     */
+    @GetMapping("/subscriptions/{id}")
+    public ResponseEntity<MobileSubscriptionDTO> get(@PathVariable Integer id) {
+        log.debug("REST request to get Mobile Subscription by id {}", id);
+        Optional<MobileSubscriptionDTO> mobSub = mobileSubscriptionService.findOne(id);
+
+        if (mobSub.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mobSub.get(), HttpStatus.OK);
     }
 
     /**
