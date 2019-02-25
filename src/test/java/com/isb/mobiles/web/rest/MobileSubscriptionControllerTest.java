@@ -265,14 +265,14 @@ public class MobileSubscriptionControllerTest {
     @Test
     @Transactional
     public void updateUser() throws Exception {
+        MobileSubscription saved = mobSubRepository.saveAndFlush(mobSub);
         int databaseSizeBeforeUpdate = mobSubRepository.findAll().size();
-
         mobSub.setUser(UPDATED_CUSTOMER);
 
         // Create the Mobile Subscription
         MobileSubscriptionDTO mobSubDTO = mobSubMapper.toDto(mobSub);
 
-        mockMvc.perform(put("/api/subscriptions/1/user", mobSubDTO)
+        mockMvc.perform(put("/api/subscriptions/" + saved.getId() + "/user", mobSubDTO)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(mobSubDTO)))
                 .andExpect(status().isOk());
