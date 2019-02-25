@@ -50,6 +50,9 @@ swagger:
       value: Delete mobile subscription
       id: Id of the mobile subscription
 
+server:
+  port: 8095
+
 
 
 
