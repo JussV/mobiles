@@ -1,0 +1,18 @@
+version: '3'
+services:
+  elasticsearch:
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    environment:
+      - discovery.type=single-node
+    image: 'elasticsearch:6.6.1'
+
+  mobile-subscriptions:
+    build: .
+    ports:
+      - '8095:8095'
+    environment:
+      - SPRING_DATA_ELASTICSEARCH_CLUSTER_NODES=elasticsearch:9300
+    depends_on:
+      - elasticsearch
