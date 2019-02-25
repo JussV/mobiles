@@ -3,6 +3,9 @@ package com.isb.mobiles.service.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 /**
  * A DTO for a Customer Entity
@@ -19,5 +22,4 @@ public class CustomerDTO {
 
     @ApiModelProperty(notes = "${swagger.customer.last-name}", required = true, hidden = true)
     private String lastName;
-
 }

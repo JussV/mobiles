@@ -5,12 +5,17 @@ import com.isb.mobiles.domain.enumeration.Type;
 import com.isb.mobiles.service.view.View;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * A DTO for the MobileSubscription Entity
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @ApiModel(description = "Class representing a mobile subscription.")
 public class MobileSubscriptionDTO {
 

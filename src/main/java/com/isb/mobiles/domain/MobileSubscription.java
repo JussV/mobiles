@@ -1,7 +1,7 @@
 package com.isb.mobiles.domain;
 
 import com.isb.mobiles.domain.enumeration.Type;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.data.elasticsearch.annotations.Document;
 
@@ -12,6 +12,9 @@ import java.util.Date;
 
 @Data
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(indexName = "subscription", type = "mobile")
 @DynamicUpdate
 public class MobileSubscription {
