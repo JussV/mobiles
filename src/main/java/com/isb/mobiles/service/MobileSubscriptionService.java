@@ -108,11 +108,10 @@ public class MobileSubscriptionService {
      */
     public MobileSubscriptionDTO save(MobileSubscriptionDTO mobileSubscriptionDTO) {
         log.info("Request to save Mobile Subscription: {}", mobileSubscriptionDTO);
-
         MobileSubscription mobileSubscription = mobileSubscriptionMapper.toEntity(mobileSubscriptionDTO);
         mobileSubscription = mobileSubscriptionRepository.save(mobileSubscription);
-        mobileSubscriptionSearchRepository.save(mobileSubscription);
         entityManager.refresh(mobileSubscription);
+        mobileSubscriptionSearchRepository.save(mobileSubscription);
         return mobileSubscriptionMapper.toDto(mobileSubscription);
     }
 
@@ -133,8 +132,10 @@ public class MobileSubscriptionService {
                 })
                 .orElseThrow(() -> new MobileSubscriptionNotFoundException(id));
 
-        MobileSubscription mobileSubscription = mobileSubscriptionRepository.save(subUpdated);
-        log.info("Changed Type for Mobile Subscription: {}", subUpdated);
+        entityManager.detach(subUpdated);
+        MobileSubscription mobileSubscription = mobileSubscriptionRepository.save(subUpdated);;
+        mobileSubscriptionSearchRepository.save(mobileSubscription);
+        log.info("Changed Type for Mobile Subscription: {}", mobileSubscription);
         return mobileSubscriptionMapper.toDto(mobileSubscription);
 
     }
@@ -171,7 +172,9 @@ public class MobileSubscriptionService {
                 })
                 .orElseThrow(() -> new MobileSubscriptionNotFoundException(id));
 
+        entityManager.detach(subUpdated);
         MobileSubscription result = mobileSubscriptionRepository.save(subUpdated);
+        mobileSubscriptionSearchRepository.save(result);
         log.info("Changed owner of Mobile Subscription: {}", result);
         return mobileSubscriptionMapper.toDto(result);
     }
@@ -208,7 +211,9 @@ public class MobileSubscriptionService {
                 })
                 .orElseThrow(() -> new MobileSubscriptionNotFoundException(id));
 
+        entityManager.detach(subUpdated);
         MobileSubscription result = mobileSubscriptionRepository.save(subUpdated);
+        mobileSubscriptionSearchRepository.save(result);
         log.info("Changed user of Mobile Subscription: {}", result);
         return mobileSubscriptionMapper.toDto(result);
     }
@@ -221,6 +226,7 @@ public class MobileSubscriptionService {
     public void delete(Integer id) {
         log.info("Request to delete Mobile Subscription : {}", id);
         mobileSubscriptionRepository.deleteById(id);
+        mobileSubscriptionSearchRepository.deleteById(id);
     }
 
 }
